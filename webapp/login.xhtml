@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Welcome SoftSafety</title>
+	</f:facet>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<style type="text/css">
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 12px !important;
+}
+
+.label {
+	float: left;
+	width: 160px;
+}
+
+.inputIcon {
+	float: left;
+	width: 6px;
+}
+
+
+html {
+    display: table;
+    margin: auto;
+}
+
+body {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.panelGridNoBorder td {
+     border-style: hidden !important;
+}
+</style>
+</h:head>
+
+<h:body>
+
+	<h2>Welcome to SoftSafety</h2>
+	<h:form id="loginMainForm">
+		<p:panelGrid columns="2">
+			<p:outputLabel value="User Name"/> <p:inputText value="#{user.username}" style="width: 200px;"/>
+			<p:outputLabel value="Password"/> <p:password value="#{user.password}" style="width: 200px;"/>
+			<p:outputLabel value=""/>
+			<p:panelGrid columns="2" styleClass="panelGridNoBorder">
+				<p:commandButton action="#{user.login}" value="Giriş"></p:commandButton>
+				<p:commandButton  value="New User" type="button" onclick="PF('newUser').show();" ></p:commandButton>
+			</p:panelGrid>
+			
+		</p:panelGrid>
+			<p:outputLabel value="#{user.loginMessage}" rendered="#{!user.login}"/> 
+		
+	</h:form>
+	
+	<h:form id="newUserDialogAddForm">
+		<p:dialog header="Add New User" widgetVar="newUser" modal="true"
+			height="250" width="300" resizable="false">
+			<h:outputText value="Please Enter User Information" />
+			<br />
+			<p:panelGrid columns="2">
+			
+				<p:outputLabel value="Name" />
+				<p:inputText value="#{user.name}"></p:inputText>
+				<p:outputLabel value="Surname" />
+				<p:inputText value="#{user.surname}"></p:inputText>
+				<p:outputLabel value="User Name" />
+				<p:inputText value="#{user.username}"></p:inputText>
+				<p:outputLabel value="Password" />
+				<p:password value="#{user.password}"></p:password>
+				<p:outputLabel value="Confirm Password" />
+				<p:password value="#{user.rePassword}"></p:password>
+
+				<p:commandButton value="Cancel" onclick="newUser.hide()"></p:commandButton>
+				<p:commandButton action="#{user.saveNewUser}" value="Save" oncomplete="PF('newUser').show();" update=":newUserDialogAddForm"/>
+			</p:panelGrid>
+			<p:outputLabel id="signUpMessage" value="#{user.newUserAddedMessage}" rendered="#{user.newUserAdded}"/> 
+
+		</p:dialog>
+	</h:form>
+
+</h:body>
+
+</html>

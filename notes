@@ -1,0 +1,3 @@
+<!-- <f:event listener="#{user.forwardToLoginIfNotLoggedIn}" type="preRenderView" /> -->
+
+or '1'='1

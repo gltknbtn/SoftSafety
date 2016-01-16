@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+		<title>Software Safety</title>
+	</f:facet>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<style type="text/css">
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 12px !important;
+}
+
+.label {
+	float: left;
+	width: 160px;
+}
+
+.inputIcon {
+	float: left;
+	width: 6px;
+}
+
+html, body {
+	height: 100%;
+}
+
+html {
+	display: table;
+	margin: auto;
+}
+
+body {
+	display: table-cell;
+}
+
+.panelGridStyle>tbody>tr>td {
+    vertical-align: top;
+    
+}
+
+.panelGridNoBorder td {
+     border-style: hidden !important;
+}
+
+</style>
+
+<script>
+function setSize () {
+	 $(".ui-dialog").css ({
+	    "width": 300,
+	    "height": 200,
+	    "left": "50%",
+	    "top": "50%",
+	    "margin-left": -150,
+	    "margin-top": -100
+	  });
+	}
+</script>
+
+</h:head>
+
+<f:event listener="#{user.forwardToLoginIfNotLoggedIn}" type="preRenderView" />
+<h:body>
+
+	<h1>SoftSafety v01</h1>
+	<h:form id="personelForm">
+
+		<p:panelGrid columns="2" styleClass="panelGridStyle">
+			<p:panelGrid columns="1" styleClass="panelGridNoBorder">
+			Search Criterias
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Name" />
+					<p:inputText value="#{personelBean.name}"></p:inputText>
+					<p:outputLabel value="Surname" />
+					<p:inputText value="#{personelBean.surname}"></p:inputText>
+					<p:outputLabel value="Age" />
+					<p:inputText value="#{personelBean.age}"></p:inputText>
+					<p:outputLabel value="Mail" />
+					<p:inputText value="#{personelBean.mail}"></p:inputText>
+					<p:outputLabel value="Country" />
+					<p:inputText value="#{personelBean.country}"></p:inputText>
+	
+					<p:commandButton value="Clear" action="#{personelBean.clearFields}" update=" :personelForm" />
+					<p:commandButton action="#{personelBean.search(personelBean.name, personelBean.surname, personelBean.age, personelBean.mail, personelBean.country)}" value="Search" update=" :personelForm:personelTable" />
+				</p:panelGrid>
+			</p:panelGrid>
+
+			<p:panelGrid columns="1" >
+				<p:panel style="border: none">
+					<p:commandButton value="New Personel" type="button"	onclick="PF('dlg2').show();" />
+					<p:commandButton action="#{user.logout}" value="Exit"/>
+				</p:panel>
+
+				<p:dataTable value="#{personelBean.personelList}" var="personel"
+					style="width:1000px;" id="personelTable" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="ID"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.id}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Name"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.name}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Surname"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.surname}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Age"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.age}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Mail"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.mail}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Country"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{personel.country}"></h:outputText>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Delete"></h:outputText>
+						</f:facet>
+						<p:commandButton update=":personelForm:personelTable" action="#{personelBean.deletePersonel(personel.id)}" value="Delete">
+							<p:confirm header="Delete Personel"	message="Are you sure to delete personel?" icon="ui-icon-alert" />
+						</p:commandButton>
+						
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Update"></h:outputText>
+						</f:facet>
+						<p:commandButton value="Update" update=":personelDialogUpdateForm" action="#{personelBean.getPersonelToBeUpdate(personel.id)}" oncomplete="PF('dlg3').show();"/>
+					</p:column>
+				</p:dataTable>
+
+			</p:panelGrid>
+
+		</p:panelGrid>
+
+
+
+	</h:form>
+
+	<h:form id="personelDialogAddForm">
+	<p:growl id="growl2" showDetail="true" sticky="true" /> 
+		<p:dialog header="Add Personel" widgetVar="dlg2" modal="true"
+			height="220" width="300" resizable="false">
+			<h:outputText value="Please Enter Personel Information" />
+			<br />
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Name" />
+				<p:inputText value="#{personelBean.name}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Surname" />
+				<p:inputText value="#{personelBean.surname}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Age" />
+				<p:inputText value="#{personelBean.age}">
+					<f:validateRegex pattern="[0-9]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Mail" />
+				<p:inputText value="#{personelBean.mail}">
+				
+				</p:inputText>
+				<p:outputLabel value="Country" />
+				<p:inputText value="#{personelBean.country}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+
+				<p:commandButton value="Cancel" onclick="dlg2.hide()"></p:commandButton>
+				<p:commandButton action="#{personelBean.savePersonel}" value="Save"
+					update=":personelDialogAddForm :personelForm:personelTable"
+					oncomplete="PF('dlg2').hide();" />
+			</p:panelGrid>
+
+		</p:dialog>
+	</h:form>
+	
+		<h:form id="personelDialogUpdateForm">
+		
+		<p:growl id="growl" showDetail="true" sticky="true" /> 
+		
+		<p:dialog header="Update Personel" widgetVar="dlg3" modal="true"
+			height="220" width="300" resizable="false">
+			<h:outputText value="Please Enter Personel Information" />
+			<br />
+			<p:panelGrid columns="2">
+				<p:outputLabel value="Name" />
+				<p:inputText value="#{personelBean.name}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Surname" />
+				<p:inputText value="#{personelBean.surname}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Age" />
+				<p:inputText value="#{personelBean.age}">
+					<f:validateRegex pattern="[0-9]+"></f:validateRegex>
+				</p:inputText>
+				<p:outputLabel value="Mail" />
+				<p:inputText value="#{personelBean.mail}">
+				</p:inputText>
+				<p:outputLabel value="Country" />
+				<p:inputText value="#{personelBean.country}">
+					<f:validateRegex pattern="[a-zA-ZöÖçÇşŞğĞüÜİı]+"></f:validateRegex>
+				</p:inputText>
+
+				<p:commandButton value="Cancel" onclick="dlg3.hide()"/>
+				<p:commandButton action="#{personelBean.updatePersonel(personelBean.name, personelBean.surname, personelBean.age, personelBean.mail, personelBean.country)}" value="Update"
+					update=":personelForm:personelTable growl"
+					oncomplete="PF('dlg3').hide();" >
+					
+					<p:confirm header="Delete Personel"	message="Are you sure to update personel?" icon="ui-icon-alert" />
+					
+				</p:commandButton>
+			</p:panelGrid>
+
+		</p:dialog>
+	</h:form>
+
+	<h:form>
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			<p:commandButton value="Yes" type="button"
+				styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			<p:commandButton value="No" type="button"
+				styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+		</p:confirmDialog>
+	</h:form>
+
+</h:body>
+
+</html>
